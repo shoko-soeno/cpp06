@@ -6,7 +6,7 @@
 # include <limits>
 # include <cmath>
 
-LiteralType detectType(const std::string& literal);
+// LiteralType detectType(const std::string& literal);
 
 struct ScalarValues {
     bool    isCharDisplayable;
