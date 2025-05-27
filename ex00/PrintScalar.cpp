@@ -1,4 +1,4 @@
-#include "ScalarConverter.hpp"
+#include "ScalarConverter.h"
 
 void ScalarConverter::printChar(char value)
 {
@@ -29,3 +29,7 @@ void ScalarConverter::printDouble(double value)
         std::cout << ".0";
     std::cout << std::endl;
 }
+/*
+if the value has no decimal part,
+    print it as a float/double with .0
+*/

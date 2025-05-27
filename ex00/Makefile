@@ -1,7 +1,8 @@
 NAME = ScalarConverter
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
-SRCS = main.cpp ScalarConverter.cpp
+SRCS = main.cpp ScalarConverter.cpp ScalarCaster.cpp \
+		PrintScalar.cpp TypeDetector.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)

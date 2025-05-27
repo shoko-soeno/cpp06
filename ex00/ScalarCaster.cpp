@@ -1,4 +1,4 @@
-#include "ScalarConverter.hpp"
+#include "ScalarConverter.h"
 
 void ScalarConverter::convertChar(const std::string &literal)
 {
@@ -95,3 +95,8 @@ void ScalarConverter::convertDouble(const std::string &literal)
     printFloat(static_cast<float>(d));
     printDouble(d);
 }
+/*
+special cases (nan, inf, -inf, nanf, +inff, -inff)
+    not convertible to char or int
+    but can be converted to float and double
+*/

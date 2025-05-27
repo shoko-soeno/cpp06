@@ -6,6 +6,9 @@ ScalarConverter::ScalarConverter(const ScalarConverter &src)
 {
     (void)src;
 }
+/*
+This class should not be instantiated or copied
+*/
 
 ScalarConverter &ScalarConverter::operator=(const ScalarConverter &src)
 {
@@ -34,8 +37,6 @@ void ScalarConverter::convert(const std::string &literal)
     else
         std::cout << "Error: Invalid input" << std::endl;
 }
-
-// ScalarConverter::convert()
-LiteralType type = detectType(input);
-ScalarValues values = castToAllTypes(input, type);
-printScalarValues(values);
+/*
+detect char/int/float/double and convert it to all types
+*/
