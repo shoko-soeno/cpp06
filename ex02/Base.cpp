@@ -1,7 +1,7 @@
 #include "Base.h"
 
 Base *generate(void) {
-    std::srand(std::time(NULL));
+    std::srand(time(NULL));
     int random = rand() % 3;
 
     switch (random) {

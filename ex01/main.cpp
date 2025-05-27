@@ -23,14 +23,14 @@ int main()
     Data d2 = {"bar", -999};
     Data d3 = {"", 0};
 
-    Data* arr[] = {&d1, &d2, &d3, nullptr};
+    Data* arr[] = {&d1, &d2, &d3, NULL};
 
     for (int i = 0; i < 4; ++i) {
         uintptr_t raw = Serializer::serialize(arr[i]);
         Data* restored = Serializer::deserialize(raw);
         std::cout << "Test " << i << ": ";
-        if (arr[i] == nullptr) {
-            std::cout << (restored == nullptr ? "nullptr OK" : "nullptr NG") << std::endl;
+        if (arr[i] == NULL) {
+            std::cout << (restored == NULL ? "nullptr OK" : "nullptr NG") << std::endl;
         } else {
             std::cout << "Addr: " << arr[i] << " <-> " << restored
                     << ", Name: " << restored->name
