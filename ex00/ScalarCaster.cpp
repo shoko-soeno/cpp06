@@ -1,5 +1,11 @@
 #include "ScalarConverter.h"
 
+/*
+ex00 float, doubleのオーバーフローを検知するコードがINT_MAXと比較していたため、
+本来はオーバーフローしない場合でもimpossibleと出力されていました。
+オーバーフローした際にはoverflowedと出力すると親切かもしれません。
+*/
+
 void ScalarConverter::convertChar(const std::string &literal)
 {
     char c = literal[0];
