@@ -1,22 +1,22 @@
 NAME = Serializer
-CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
+CXX = c++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 SRCS = main.cpp Serializer.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	$(RM) $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 
