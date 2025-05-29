@@ -4,6 +4,23 @@
 ex00 float, doubleのオーバーフローを検知するコードがINT_MAXと比較していたため、
 本来はオーバーフローしない場合でもimpossibleと出力されていました。
 オーバーフローした際にはoverflowedと出力すると親切かもしれません。
+
+範囲チェック	
+if (std::fabs(x) > std::numeric_limits<float>::max())
+Module 06 での実装ポイント
+オーバーフローして Inf になったら<br>int/char へのダウンキャストは禁止（未定義動作）。
+まず std::isfinite(d) を挟んで “impossible” 判定にするのが正解です。
+
+例外的な入力の弾き	std::isfinite() で NaN/Inf を門前払い
+
+すぐできる「理解度チェック」クイズ
+float f = 1e39f; の後、f == std::numeric_limits<float>::infinity() は真？
+
+double d = DBL_MAX * 0.5 * 3; でオーバーフローは起こる？
+
+std::pow(10.0, 400) が返す値は？（処理系標準ライブラリに従う）
+→ 自分の環境で実行 → isinf / isfinite を使って確かめる
+
 */
 
 void ScalarConverter::convertChar(const std::string &literal)
@@ -50,8 +67,15 @@ void ScalarConverter::convertFloat(const std::string &literal)
             f = -std::numeric_limits<float>::infinity();
     }
     else
+    {
+        errno = 0; // Reset errno before conversion
         f = strtof(literal.c_str(), NULL);
-
+        if (errno == ERANGE)
+        {
+            std::cout << "float: overflowed\n";
+            return;
+        }
+    }
     {
         if (std::isnan(f) || std::isinf(f))
             std::cout << "char: impossible\n";
@@ -83,8 +107,15 @@ void ScalarConverter::convertDouble(const std::string &literal)
             d = -std::numeric_limits<double>::infinity();
     }
     else
+    {
+        errno = 0; // Reset errno before conversion
         d = strtod(literal.c_str(), NULL);
-
+        if (errno == ERANGE)
+        {
+            std::cout << "double: overflowed\n";
+            return;
+        }
+    }
     {
         if (std::isnan(d) || std::isinf(d))
             std::cout << "char: impossible\n";
