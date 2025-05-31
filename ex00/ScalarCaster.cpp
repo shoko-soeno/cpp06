@@ -1,28 +1,5 @@
 #include "ScalarConverter.h"
 
-/*
-ex00 float, doubleのオーバーフローを検知するコードがINT_MAXと比較していたため、
-本来はオーバーフローしない場合でもimpossibleと出力されていました。
-オーバーフローした際にはoverflowedと出力すると親切かもしれません。
-
-範囲チェック	
-if (std::fabs(x) > std::numeric_limits<float>::max())
-Module 06 での実装ポイント
-オーバーフローして Inf になったら<br>int/char へのダウンキャストは禁止（未定義動作）。
-まず std::isfinite(d) を挟んで “impossible” 判定にするのが正解です。
-
-例外的な入力の弾き	std::isfinite() で NaN/Inf を門前払い
-
-すぐできる「理解度チェック」クイズ
-float f = 1e39f; の後、f == std::numeric_limits<float>::infinity() は真？
-
-double d = DBL_MAX * 0.5 * 3; でオーバーフローは起こる？
-
-std::pow(10.0, 400) が返す値は？（処理系標準ライブラリに従う）
-→ 自分の環境で実行 → isinf / isfinite を使って確かめる
-
-*/
-
 void ScalarConverter::convertChar(const std::string &literal)
 {
     char c = literal[0];
@@ -41,11 +18,12 @@ void ScalarConverter::convertInt(const std::string &literal)
     {
         std::cout << "char: impossible\n";
         std::cout << "int: impossible\n";
-        std::cout << "float: impossible\n";
-        std::cout << "double: impossible\n";
+        float f = static_cast<float>(value);
+        printFloat(f);
+        double d = static_cast<double>(value);
+        printDouble(d);
         return;
     }
-
     int i = static_cast<int>(value);
     printChar(static_cast<char>(i));
     printInt(i);
@@ -56,6 +34,7 @@ void ScalarConverter::convertInt(const std::string &literal)
 void ScalarConverter::convertFloat(const std::string &literal)
 {
     float f = 0.0f;
+    bool is_overflowed = false;
 
     if (literal == "nanf" || literal == "+inff" || literal == "-inff")
     {
@@ -72,30 +51,22 @@ void ScalarConverter::convertFloat(const std::string &literal)
         f = strtof(literal.c_str(), NULL);
         if (errno == ERANGE)
         {
-            std::cout << "float: overflowed\n";
-            return;
+            is_overflowed = true;
         }
     }
-    {
-        if (std::isnan(f) || std::isinf(f))
-            std::cout << "char: impossible\n";
-        else
-            printChar(static_cast<char>(f));
-    }
-
-    {
-        if (std::isnan(f) || std::isinf(f) || f > std::numeric_limits<int>::max() || f < std::numeric_limits<int>::min())
-            std::cout << "int: impossible\n";
-        else
-            printInt(static_cast<int>(f));
-    }
-    printFloat(f);
+    printChar(static_cast<char>(f));
+    printInt(static_cast<int>(f));
+    if (is_overflowed)
+        std::cout << "float: impossible (overflowed)\n";
+    else
+        printFloat(f);
     printDouble(static_cast<double>(f));
 }
 
 void ScalarConverter::convertDouble(const std::string &literal)
 {
     double d = 0.0;
+    bool is_overflowed = false;
 
     if (literal == "nan" || literal == "+inf" || literal == "-inf")
     {
@@ -112,28 +83,29 @@ void ScalarConverter::convertDouble(const std::string &literal)
         d = strtod(literal.c_str(), NULL);
         if (errno == ERANGE)
         {
-            std::cout << "double: overflowed\n";
-            return;
+            is_overflowed = true;
         }
     }
-    {
-        if (std::isnan(d) || std::isinf(d))
-            std::cout << "char: impossible\n";
-        else
-            printChar(static_cast<char>(d));
-    }
-
-    {
-        if (std::isnan(d) || std::isinf(d) || d > std::numeric_limits<int>::max() || d < std::numeric_limits<int>::min())
-            std::cout << "int: impossible\n";
-        else
-            printInt(static_cast<int>(d));
-    }
+    printChar(static_cast<char>(d));
+    printInt(static_cast<int>(d));
     printFloat(static_cast<float>(d));
-    printDouble(d);
+    if (is_overflowed)
+        std::cout << "double: impossible (overflowed)\n";
+    else
+        printDouble(d);
 }
 /*
 special cases (nan, inf, -inf, nanf, +inff, -inff)
     not convertible to char or int
     but can be converted to float and double
+
+Significant digits (precision)
+    This tells how many digits are accurate in a number.
+    float has about 7 digits of precision.
+    double has about 15–16 digits of precision.
+
+Exponent range (magnitude)
+    This tells how large or small a number you can represent.
+    float can store numbers up to about 10^38.
+    double can go up to about 10^308.
 */

@@ -5,6 +5,7 @@
 # include <cstdlib>
 # include <limits>
 # include <cmath>
+# include <cerrno>
 
 // LiteralType detectType(const std::string& literal);
 

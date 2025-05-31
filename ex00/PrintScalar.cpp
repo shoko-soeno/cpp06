@@ -3,6 +3,11 @@
 void ScalarConverter::printChar(char value)
 {
     std::cout << "char: ";
+    if (std::isnan(value) || std::isinf(value))
+    {
+        std::cout << "char: impossible\n";
+        return ;
+    }
     if (std::isprint(value))
         std::cout << "'" << value << "'" << std::endl;
     else
@@ -11,6 +16,11 @@ void ScalarConverter::printChar(char value)
 
 void ScalarConverter::printInt(int value)
 {
+    if (std::isfinite(value) || value > std::numeric_limits<int>::max() || value < std::numeric_limits<int>::min())
+    {
+        std::cout << "int: impossible\n";
+        return;
+    }
     std::cout << "int: " << value << std::endl;
 }
 
