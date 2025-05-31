@@ -3,7 +3,7 @@
 void ScalarConverter::printChar(char value)
 {
     std::cout << "char: ";
-    if (std::isnan(value) || std::isinf(value))
+    if (!std::isfinite(value))
     {
         std::cout << "char: impossible\n";
         return ;
@@ -16,7 +16,7 @@ void ScalarConverter::printChar(char value)
 
 void ScalarConverter::printInt(int value)
 {
-    if (std::isfinite(value) || value > std::numeric_limits<int>::max() || value < std::numeric_limits<int>::min())
+    if (!std::isfinite(value) || value > std::numeric_limits<int>::max() || value < std::numeric_limits<int>::min())
     {
         std::cout << "int: impossible\n";
         return;
